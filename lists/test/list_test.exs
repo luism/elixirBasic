@@ -54,7 +54,7 @@ defmodule ListTestTest do
 
   #? Create a hug list >1MM and make the revert
   test "manual reverse speed" do
-    reversed = 1000000..1
+    reversed = Enum.to_list(1000000..1)
     {microsecs, _} = :timer.tc fn ->
       Enum.reduce(reversed,[], fn (x, acc) -> List.insert_at(acc, 0, x) end)
     end
