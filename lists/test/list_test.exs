@@ -50,22 +50,29 @@ defmodule ListTestTest do
   test "list comprehension" do
     hello_list = for k <- ListTest.sample, do: "Hello " <> k <>"!"
     assert hello_list == ["Hello Lucho!", "Hello Juan Pi!", "Hello Carlos!", "Hello Isaias!", "Hello Luis!", "Hello Matias!", "Hello Ale!"]
-
   end
 
   #? Create a hug list >1MM and make the revert
   test "manual reverse speed" do
-    assert 1 == 1#reversed == Enum.to_list(1MM..1)
-    # IO.puts "manual reverse took #{microsec} microsecs"
+    reversed = 1000000..1
+    {microsecs, _} = :timer.tc fn ->
+      Enum.reduce(reversed,[], fn (x, acc) -> List.insert_at(acc, 0, x) end)
+    end
+    IO.puts "manual reverse took #{microsecs} microsecs"
+    assert 1 == 1
   end
 
    test "speed of inserting at the end of a list" do
-    assert 1 == 1#reversed == Enum.to_list(1..1MM+1)
-    # IO.puts "inserting at the end of a list took #{microsec} microsecs"
+    reversed = Enum.to_list(1..1000000)
+    {microsecs, _} = :timer.tc fn -> List.insert_at(reversed, -1, -1) end
+    IO.puts "inserting at the end of a list took #{microsecs} microsecs"
+    assert 1 == 1
   end
 
   test "Enum.reverse speed" do
-    assert 1 == 1#reversed == Enum.to_list(1MM..1)
-    # IO.puts "Enum.reverse took #{microsec} microsecs"
+    reversed = Enum.to_list(1000000..1)
+    {microsecs, _} = :timer.tc fn -> Enum.reverse(reversed) end
+    IO.puts "Enum.reverse took #{microsecs} microsecs"
+    assert 1 == 1
   end
 end
